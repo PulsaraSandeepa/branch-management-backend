@@ -107,7 +107,7 @@ router.delete(
 // @access Public
 router.get("/search/:name", (req, res) => {
     const errors = {};
-    console.log(req.params.name);
+    // console.log(req.params.name);
     const query = {name: {'$regex': req.params.name + '.*', '$options': 'i'}};
 
 
