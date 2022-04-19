@@ -44,13 +44,39 @@ router.post("/add-branch", (req, res) => {
 
 });
 
+// @route UPDATE api/branch/update/:id
+// @desc update branch
+// @access Public
+router.put("/update/(:id)", (req, res) => {
+    const errors = {};
+    Branch.findOne({branch_id: req.params.id})
+        .then((branch) => {
+            if (branch) {
+                Branch.findOne({branch_id: req.params.id})
+                    .then(branch => {
+                        branch.name = req.body.name;
+                        branch.location = req.body.location;
+                        branch.contact = req.body.contact;
+                        branch.save()
+                            .then(branch => res.json(branch))
+                            .catch(err => console.log(err));
+                    })
+                    .catch((err) => res.status(404).json(err));
+            } else {
+                errors.branch = "Cannot find the branch";
+                return res.status(400).json(errors);
+            }
+        })
+        .catch((err) => res.status(404).json(err));
+});
+
 // @route DELETE api/branch/delete/:id
 // @desc delete branch
 // @access Public
 router.delete(
     "/delete/(:id)",
     (req, res) => {
-        Branch.deleteOne({branch_id: req.params.id}, (err, branch) => {
+        Branch.deleteOne({branch_id: req.params.id}, (err, branch) => {0
             if (!err) {
                 res.json(branch);
             } else {
@@ -58,6 +84,7 @@ router.delete(
             }
         });
     });
+
 
 
 module.exports = router;
