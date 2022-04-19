@@ -23,7 +23,7 @@ router.get('/all', (req, res) => {
 // @access Public
 router.get("/:id", (req, res) => {
     const errors = {};
-    Branch.findOne({ branch_id: req.params.id })
+    Branch.findOne({branch_id: req.params.id})
         .then((branch) => {
             if (!branch) {
                 errors.nobranch = "There is no branch found";
@@ -93,7 +93,7 @@ router.put("/update/(:id)", (req, res) => {
 router.delete(
     "/delete/(:id)",
     (req, res) => {
-        Branch.deleteOne({branch_id: req.params.id}, (err, branch) => {0
+        Branch.deleteOne({branch_id: req.params.id}, (err, branch) => {
             if (!err) {
                 res.json(branch);
             } else {
@@ -102,6 +102,25 @@ router.delete(
         });
     });
 
+// @route GET api/branch/search/:name
+// @desc get searched branches
+// @access Public
+router.get("/search/:name", (req, res) => {
+    const errors = {};
+    console.log(req.params.name);
+    const query = {name: {'$regex': req.params.name + '.*', '$options': 'i'}};
+
+
+    Branch.find(query)
+        .then((branches) => {
+            if (!branches) {
+                errors.nobranch = "There is no branch found";
+                res.status(404).json(errors);
+            }
+            res.json(branches);
+        })
+        .catch((err) => res.status(404).json(err));
+});
 
 
 module.exports = router;
