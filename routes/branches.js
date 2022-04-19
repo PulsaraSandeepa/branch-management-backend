@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Branch = require('../models/branch');
+
 // @route GET api/branch/all-branches
 // @desc get all branches
 // @access Public
-
 router.get('/all', (req, res) => {
     const errors = {};
     Branch.find()
@@ -17,6 +17,23 @@ router.get('/all', (req, res) => {
         })
         .catch((err) => res.status(404).json(err));
 });
+
+// @route GET api/branch/:id
+// @desc get all branches
+// @access Public
+router.get("/:id", (req, res) => {
+    const errors = {};
+    Branch.findOne({ branch_id: req.params.id })
+        .then((branch) => {
+            if (!branch) {
+                errors.nobranch = "There is no branch found";
+                res.status(404).json(errors);
+            }
+            res.json(branch);
+        })
+        .catch((err) => res.status(404).json(err));
+});
+
 
 // @route POST api/branch/add-branch
 // @desc add branch
